@@ -39,16 +39,17 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 export async function GET(req:NextApiRequest) {
     const mongodb_uri = process.env.MONGODB_URI || ""
     const client = new MongoClient(mongodb_uri)
-    const response = {errors : [''], data: ['']}
+    const response = {errors : [''], data: ['maybe good, idk']}
     try {
         await client.connect()
         console.log(req)
-        const database = client.db("nextjs-app")
+        const database = client.db('nextjs-app')
         const user_collection = database.collection("")
-        const username = req.query.username // ! FIX THIS
+        const query = new URLSearchParams(req.url)
+        const username = query.get('username')
         const usernameMatch = await user_collection.find({username}).toArray()
 
-        const email = req.query.email
+        const email = query.get('email')
         const emailMatch = await user_collection.find({email}).toArray()
 
         if ((usernameMatch).length > 0) {
