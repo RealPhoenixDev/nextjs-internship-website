@@ -3,7 +3,8 @@
 // import {Input} from '@heroui/input';
 "use client"
 import {Button, Form, Input} from "@heroui/react";
-import React from "react";
+import React, { useEffect } from "react";
+import axios from 'axios'
 
 
 export const EyeSlashFilledIcon = (props) => {
@@ -70,11 +71,21 @@ export default function RegisterForm() {
     const [submitted, setSubmitted] :unknown = React.useState(null);
     const [password, setPassword] = React.useState("");
     const [isVisible,setIsVisible] = React.useState(false)
+    const [submitErrors, setErrors] : any = React.useState({})
     const errors: string[] = [];
 
     const toggleVisibility = () => setIsVisible(!isVisible)
-
-    const onSubmit = (e) => {
+    useEffect(()=>{
+        const asyncFunc = async ()=>{
+          const result =  await axios.get("/api/auth/validateRegisterData", {
+            params: {username:"PhoenixDev", email:"realphoenixdev@gmail.com"}
+          }).catch(console.log)
+          console.log('test')
+          console.log(result)
+        } 
+        asyncFunc().catch(console.error)
+    },[])
+    const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const data = Object.fromEntries(new FormData(e.currentTarget));
 
