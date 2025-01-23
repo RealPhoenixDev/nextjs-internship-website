@@ -1,7 +1,9 @@
 "use client";
 import { Button, Form, Input } from "@heroui/react";
 import axios from "axios";
+import { redirect } from "next/navigation";
 import React from "react";
+import Cookies from "js-cookie";
 
 export const EyeSlashFilledIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
@@ -91,12 +93,20 @@ export default function RegisterForm() {
     const data = Object.fromEntries(new FormData(e.currentTarget));
     const validationData = await validateRegiserData(data);
     if (Object.keys(validationData.errors).length === 0) {
-      console.log("yippee");
-      await axios
+      const tokens = await axios
         .post("/api/auth/register", {
           data: data,
         })
         .catch(console.log);
+      if (tokens) {
+        if (tokens.status === 200) {
+          Cookies.set("session_token", tokens.data.session_token);
+          Cookies.set("access_token", tokens.data.access_token);
+          redirect("/");
+        }
+        console.log(tokens.data.error);
+        redirect("/");
+      }
     } else {
       setSubmitErrors(validationData.errors);
     }
@@ -136,7 +146,6 @@ export default function RegisterForm() {
           name="last_name"
           placeholder="Last Name"
           radius="sm"
-          color="primary"
           variant="bordered"
         />
       </div>
