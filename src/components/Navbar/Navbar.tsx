@@ -25,7 +25,7 @@ export default function Navbar() {
         <Image
           src="Company Logo White.svg"
           alt="Company logo"
-          className="max-h-full h-full"
+          className="opacity-100 max-h-full h-full"
           height={64}
         />
         <p className="font-thin text-2xl">MKM Engineering</p>
