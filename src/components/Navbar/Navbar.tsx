@@ -1,5 +1,6 @@
-import { Button } from "@heroui/button";
-import { Link } from "@heroui/link";
+"use client";
+// import { Button } from "@heroui/button";
+// import { Button, Link } from "@heroui/react";
 import {
   Navbar as Nav,
   NavbarBrand,
@@ -8,7 +9,9 @@ import {
   NavbarMenuToggle,
   NavbarMenu,
   NavbarMenuItem,
-} from "@heroui/navbar";
+  Button,
+  Link,
+} from "@heroui/react";
 
 export default function Navbar() {
   return (
