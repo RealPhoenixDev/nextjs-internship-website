@@ -196,7 +196,12 @@ export default function RegisterForm() {
           </button>
         }
       />
-      <Button type="submit" radius="sm" className="w-full bg-primary-500 h-14">
+      <Button
+        type="submit"
+        radius="sm"
+        className="w-full h-14"
+        color="secondary"
+      >
         Register
       </Button>
     </Form>

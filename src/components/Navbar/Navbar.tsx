@@ -16,20 +16,35 @@ import {
 
 export default function Navbar() {
   return (
-    <Nav className="dark bg-opacity-40 z-10" height={64}>
+    <Nav
+      className="dark bg-opacity-40 z-10 font-[family-name:var(--font-geist-mono)]"
+      maxWidth="xl"
+      height={64}
+    >
       <NavbarBrand>
-        <Image src="Company Logo White.svg" alt="Company logo" className="" />
-        <p className="font-bold text-inherit">ACME</p>
+        <Image
+          src="Company Logo White.svg"
+          alt="Company logo"
+          className="max-h-full h-full"
+          height={64}
+        />
+        <p className="font-thin text-2xl">MKM Engineering</p>
       </NavbarBrand>
-      <NavbarContent>
+      <NavbarContent justify="center">
         <NavbarItem>
-          <Link href="/">Home</Link>
+          <Link href="/" underline="hover">
+            Home
+          </Link>
         </NavbarItem>
         <NavbarItem>
-          <Link href="/about">About Us</Link>
+          <Link href="/about" underline="hover">
+            About Us
+          </Link>
         </NavbarItem>
         <NavbarItem>
-          <Link href="/contacts">Contacts</Link>
+          <Link href="/contacts" underline="hover">
+            Contacts
+          </Link>
         </NavbarItem>
       </NavbarContent>
       <NavbarContent justify="end">

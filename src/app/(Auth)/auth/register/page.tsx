@@ -2,9 +2,9 @@ import RegisterForm from "@/app/(Auth)/auth/components/register-form";
 
 export default function RegisterPage() {
   return (
-    <div className="w-full h-full flex flex-col items-center justify-center box-border my-16">
+    <div className="w-full h-full flex flex-col items-center justify-center box-border my-16 font-[family-name:var(--font-geist-mono)]">
       <div className="w-4/5 h-4/5">
-        <h1 className=" text-[3rem]">Create an account</h1>
+        <h1 className=" text-[2.8rem]">Create an account</h1>
         <span className=" text-sm ">
           Already have an Account?{" "}
           <a
