@@ -1,3 +1,5 @@
+import { Button } from "@heroui/button";
+import { Link } from "@heroui/link";
 import {
   Navbar as Nav,
   NavbarBrand,
@@ -18,7 +20,11 @@ export default function Navbar() {
         <NavbarItem>Thing 3</NavbarItem>
       </NavbarContent>
       <NavbarContent justify="end">
-        <NavbarItem>Log In</NavbarItem>
+        <NavbarItem>
+          <Button as={Link} href="/auth/login">
+            Log In
+          </Button>
+        </NavbarItem>
         <NavbarItem>Sign up</NavbarItem>
       </NavbarContent>
     </Nav>
