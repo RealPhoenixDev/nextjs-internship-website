@@ -2,6 +2,8 @@
 import { Button, Form, Input } from "@heroui/react";
 import axios from "axios";
 import React from "react";
+import Cookies from "js-cookie";
+import { redirect } from "next/navigation";
 
 export const EyeSlashFilledIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
@@ -82,8 +84,9 @@ export default function LoginForm() {
       if (result.data.error) {
         setError(result.data.error);
       } else {
-        console.log(result.data.data.session_token);
-        console.log(result.data.data.access_token);
+        Cookies.set("session_token", result.data.data.session_token);
+        Cookies.set("access_token", result.data.data.access_token);
+        redirect("/");
       }
     } else {
       throw new Error("Error while fetching axios data");

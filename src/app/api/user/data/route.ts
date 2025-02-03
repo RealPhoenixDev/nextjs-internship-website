@@ -1,6 +1,5 @@
 import { MongoClient } from "mongodb";
 import { NextResponse } from "next/server";
-import { md5 } from "js-md5";
 
 export async function GET(req: Request) {
   const mongodb_uri = process.env.MONGODB_URI || "";
@@ -11,24 +10,18 @@ export async function GET(req: Request) {
     const user_collection = database.collection("users");
     const url = req.url || "";
     const query = new URL(url).searchParams;
-    const accessMatch = await user_collection.findOne({
-      session_token: query.get("session_token"),
-    });
-    if (accessMatch) {
-      const newAccessToken = md5(Math.random().toString());
-      user_collection.updateOne(
-        {
-          _id: accessMatch._id,
-        },
-        { $set: { access_token: newAccessToken } }
-      );
-      return NextResponse.json({ access_token: newAccessToken });
-    } else {
+    const user = await user_collection
+      .find({ access_token: query.get("access_token") })
+      .toArray();
+    if (!user[0]) {
       return NextResponse.json(
         { error: "Invalid access token!" },
-        { status: 401 }
+        { status: 501 }
       );
     }
+    delete user[0].session_token;
+    delete user[0].access_token;
+    return NextResponse.json(user[0]);
   } catch (error) {
     console.error("error: " + error);
     return NextResponse.json(

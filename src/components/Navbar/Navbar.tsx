@@ -1,6 +1,7 @@
 "use client";
 // import { Button } from "@heroui/button";
 // import { Button, Link } from "@heroui/react";
+import Cookies from "js-cookie";
 import {
   Navbar as Nav,
   NavbarBrand,
@@ -12,12 +13,35 @@ import {
   Button,
   Link,
   Image,
+  Dropdown,
+  DropdownItem,
+  DropdownTrigger,
+  DropdownMenu,
+  Avatar,
 } from "@heroui/react";
+import { useEffect, useState } from "react";
+
+function isLoggedIn() {
+  if (Cookies.get("session_token")) {
+    console.log("logged in");
+  } else {
+    console.log("not logged in");
+  }
+}
 
 export default function Navbar() {
+  const [user, setUser] = useState(false);
+
+  useEffect(() => {
+    if (Cookies.get("session_token")) {
+      setUser(true);
+    }
+    console.log(Cookies.get("session_token"));
+  }, []);
+
   return (
     <Nav
-      className="dark bg-opacity-40 z-10 font-[family-name:var(--font-geist-mono)]"
+      className="dark bg-opacity-40 z-20 font-[family-name:var(--font-geist-mono)]"
       maxWidth="xl"
       height={64}
     >
@@ -49,21 +73,53 @@ export default function Navbar() {
         </NavbarItem>
       </NavbarContent>
       <NavbarContent justify="end">
-        <NavbarItem>
-          <Button
-            variant="bordered"
-            as={Link}
-            href="/auth/register"
-            radius="sm"
-          >
-            Sign Up
-          </Button>
-        </NavbarItem>
-        <NavbarItem>
-          <Button as={Link} href="/auth/login" color="secondary" radius="sm">
-            Log In
-          </Button>
-        </NavbarItem>
+        {!user && (
+          <NavbarItem>
+            <Button
+              variant="bordered"
+              as={Link}
+              href="/auth/register"
+              radius="sm"
+            >
+              Sign Up
+            </Button>
+          </NavbarItem>
+        )}
+        {!user && (
+          <NavbarItem>
+            <Button as={Link} href="/auth/login" color="secondary" radius="sm">
+              Log In
+            </Button>
+          </NavbarItem>
+        )}
+        {user && (
+          <Dropdown placement="bottom-end">
+            <DropdownTrigger>
+              <Avatar
+                isBordered
+                as="button"
+                className="transition-transform "
+                color="secondary"
+                name="Jason Hughes"
+                size="md"
+                src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
+              />
+            </DropdownTrigger>
+            <DropdownMenu
+              aria-label="Profile Actions"
+              variant="flat"
+              className="box-border outline-none data-[focus-visible=true]:z-10  shadow-medium rounded-large transition-transform-background border-transparent bg-default-800 backdrop-saturate-[1.8] "
+            >
+              <DropdownItem key="profile" href="/user/settings">
+                Profile
+              </DropdownItem>
+              <DropdownItem key="settings">My Settings</DropdownItem>
+              <DropdownItem key="logout" color="danger" href="/auth/logout">
+                Log Out
+              </DropdownItem>
+            </DropdownMenu>
+          </Dropdown>
+        )}
       </NavbarContent>
     </Nav>
   );
