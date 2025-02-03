@@ -50,12 +50,17 @@ export default function Navbar() {
       </NavbarContent>
       <NavbarContent justify="end">
         <NavbarItem>
-          <Button variant="bordered" as={Link} href="/auth/register">
+          <Button
+            variant="bordered"
+            as={Link}
+            href="/auth/register"
+            radius="sm"
+          >
             Sign Up
           </Button>
         </NavbarItem>
         <NavbarItem>
-          <Button as={Link} href="/auth/login" color="primary">
+          <Button as={Link} href="/auth/login" color="secondary" radius="sm">
             Log In
           </Button>
         </NavbarItem>
