@@ -18,6 +18,7 @@ export async function GET(req: Request) {
     const emailMatch = await user_collection
       .find({ email: query.get("username_email") })
       .toArray();
+    // Checks if there are users with provided Username or Email
     if (dataMatch.length === 0) {
       if (emailMatch.length === 0) {
         return NextResponse.json({
@@ -30,7 +31,13 @@ export async function GET(req: Request) {
       dataMatch = emailMatch;
     }
     const password = md5(query.get("password") || "");
+    // Checks if user's password matches the entered one
     if (dataMatch[0].password === password) {
+      user_collection.updateOne(
+        { _id: dataMatch[0]._id },
+        { $set: { last_login: new Date() } }
+      );
+
       const accessTokenData = await axios
         .get("http://localhost:3000/api/auth/token/access", {
           params: { session_token: dataMatch[0].session_token },

@@ -4,30 +4,25 @@ import { NextResponse } from "next/server";
 export async function GET(req: Request) {
   const mongodb_uri = process.env.MONGODB_URI || "";
   const client = new MongoClient(mongodb_uri);
-  const response = { errors: {} };
   try {
     await client.connect();
     const database = client.db("nextjs-app");
     const user_collection = database.collection("users");
     const url = req.url || "";
     const query = new URL(url).searchParams;
-    const usernameMatch = await user_collection.findOne({
-      username: query.get("username"),
-    });
-    const emailMatch = await user_collection.findOne({
-      email: query.get("email"),
-    });
-    if (usernameMatch) {
-      response["errors"] = { username: "Username already in use!" };
+    const user = await user_collection
+      .find({ access_token: query.get("access_token") })
+      .toArray();
+    if (!user[0]) {
+      return NextResponse.json(
+        { error: "Invalid access token!" },
+        { status: 501 }
+      );
     }
-    if (emailMatch) {
-      response["errors"] = {
-        ...response["errors"],
-        ...{ email: "Email already in use!" },
-      };
-    }
-    console.log(response);
-    return NextResponse.json(response);
+    return NextResponse.json({
+      first_name: user[0].first_name,
+      last_name: user[0].last_name,
+    });
   } catch (error) {
     console.error("error: " + error);
     return NextResponse.json(

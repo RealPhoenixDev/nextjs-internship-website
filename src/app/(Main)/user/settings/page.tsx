@@ -3,6 +3,7 @@ import { Tabs, Tab, Avatar, Form, Input, Button } from "@heroui/react";
 import Cookies from "js-cookie";
 import { redirect } from "next/navigation";
 import ProfileForm from "./components/profileForm";
+import SettingsForm from "./components/settingsForm";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
@@ -25,11 +26,16 @@ export default function Page() {
   }, []);
 
   return (
-    <div className="flex flex-col h-screen items-center dark">
+    <div className="flex flex-col h-screen items-center">
       <div className="flex flex-col items-center w-full max-w-screen-xl">
         <div className="w-full mt-16">
           <div className="flex items-center gap-4">
-            <Avatar isBordered color="secondary" size="lg" />
+            <Avatar
+              isBordered
+              color="secondary"
+              size="lg"
+              name={data.first_name}
+            />
             <div>
               <span className="font-semibold text-lg">{data.first_name} </span>
               <span className="font-semibold text-lg">{data.last_name}</span>
@@ -43,10 +49,16 @@ export default function Page() {
             variant="underlined"
             aria-label="Tabs variants"
           >
-            <Tab key="profile" title="Profile" className="w-1/4">
-              <ProfileForm data={data} />
+            <Tab key="profile" title="Profile">
+              <div className="w-1/4">
+                <ProfileForm data={data} />
+              </div>
             </Tab>
-            <Tab key="settings" title="Settings" />
+            <Tab key="settings" title="Settings">
+              <div className="w-1/4">
+                <SettingsForm data={data} />
+              </div>
+            </Tab>
           </Tabs>
         </div>
       </div>

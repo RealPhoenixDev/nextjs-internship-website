@@ -7,10 +7,11 @@ export async function GET(req: Request) {
   try {
     await client.connect();
     const database = client.db("nextjs-app");
-    const user_collection = database.collection("users");
+    const users_collection = database.collection("users");
+    const settings_collection = database.collection("settings");
     const url = req.url || "";
     const query = new URL(url).searchParams;
-    const user = await user_collection
+    const user = await users_collection
       .find({ access_token: query.get("access_token") })
       .toArray();
     if (!user[0]) {
@@ -19,9 +20,19 @@ export async function GET(req: Request) {
         { status: 501 }
       );
     }
-    delete user[0].session_token;
-    delete user[0].access_token;
-    return NextResponse.json(user[0]);
+    const settings = await settings_collection
+      .find({ _id: user[0]._id })
+      .toArray();
+    if (!settings) {
+      return NextResponse.json(
+        { error: "Something defineatly went wrong!" },
+        { status: 502 }
+      );
+    }
+    if (settings.length < 1) {
+      return NextResponse.json({});
+    }
+    return NextResponse.json(settings[0]);
   } catch (error) {
     console.error("error: " + error);
     return NextResponse.json(
@@ -38,6 +49,7 @@ export async function POST(req: Request) {
     await client.connect();
     const database = client.db("nextjs-app");
     const user_collection = database.collection("users");
+    const settings_collection = database.collection("settings");
     const data = await req.json();
     const user = await user_collection
       .find({ access_token: data.data.access_token })
@@ -54,14 +66,10 @@ export async function POST(req: Request) {
         result[key] = value;
       }
     }
-    user_collection.updateOne(
-      { access_token: data.data.access_token },
-      { $set: result }
-    );
-    return NextResponse.json({
-      session_token: data["session_token"],
-      access_token: data["access_token"],
-    });
+    delete result.access_token;
+    result["_id"] = user[0]._id;
+    settings_collection.insertOne(result);
+    return NextResponse.json({});
   } catch (error) {
     console.log(error);
     return NextResponse.json(

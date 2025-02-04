@@ -3,7 +3,7 @@ import { Form, Input, Button, Spacer, Image } from "@heroui/react";
 
 export default function Home() {
   return (
-    <div className="flex flex-col min-h-screen font-[family-name:var(--font-geist-sans)] dark items-center">
+    <div className="flex flex-col min-h-screen font-[family-name:var(--font-geist-sans)] items-center">
       <div className="flex flex-col w-full max-w-screen-xl ">
         <div className="w-full h-[85svh] flex flex-col justify-center items-center">
           <div className="flex justify-center xl:justify-start">

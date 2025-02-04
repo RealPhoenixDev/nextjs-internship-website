@@ -20,6 +20,7 @@ import {
   Avatar,
 } from "@heroui/react";
 import { useEffect, useState } from "react";
+import axios from "axios";
 
 function isLoggedIn() {
   if (Cookies.get("session_token")) {
@@ -31,17 +32,43 @@ function isLoggedIn() {
 
 export default function Navbar() {
   const [user, setUser] = useState(false);
+  const [username, setUsername] = useState("");
+  const [name, setName] = useState({});
 
   useEffect(() => {
     if (Cookies.get("session_token")) {
       setUser(true);
+      const access_token = Cookies.get("access_token");
+      axios
+        .get("/api/user/username", {
+          params: { access_token: access_token },
+        })
+        .catch((err) => {
+          console.log(err);
+        })
+        .then((res) => {
+          if (res) {
+            setUsername(res.data.username);
+          }
+        });
+      axios
+        .get("/api/user/name", {
+          params: { access_token: access_token },
+        })
+        .catch((err) => {
+          console.log(err);
+        })
+        .then((res) => {
+          if (res) {
+            setName(res.data);
+          }
+        });
     }
-    console.log(Cookies.get("session_token"));
   }, []);
 
   return (
     <Nav
-      className="dark bg-opacity-40 z-20 font-[family-name:var(--font-geist-mono)]"
+      className="bg-opacity-40 z-20 font-[family-name:var(--font-geist-mono)]"
       maxWidth="xl"
       height={64}
     >
@@ -100,20 +127,19 @@ export default function Navbar() {
                 as="button"
                 className="transition-transform "
                 color="secondary"
-                name="Jason Hughes"
+                name={name.first_name}
                 size="md"
-                src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
               />
             </DropdownTrigger>
             <DropdownMenu
-              aria-label="Profile Actions"
-              variant="flat"
-              className="box-border outline-none data-[focus-visible=true]:z-10  shadow-medium rounded-large transition-transform-background border-transparent bg-default-800 backdrop-saturate-[1.8] "
+            // aria-label="Profile Actions"
+            // variant="flat"
+            // className="box-border data-[focus-visible=true]:z-10 shadow-medium rounded-large bg-default-800 "
             >
               <DropdownItem key="profile" href="/user/settings">
                 Profile
               </DropdownItem>
-              <DropdownItem key="settings">My Settings</DropdownItem>
+              <DropdownItem key="settings">Settings</DropdownItem>
               <DropdownItem key="logout" color="danger" href="/auth/logout">
                 Log Out
               </DropdownItem>
