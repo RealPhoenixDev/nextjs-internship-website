@@ -47,10 +47,8 @@ export async function GET(req: Request) {
         });
 
       return NextResponse.json({
-        data: {
-          session_token: dataMatch[0].session_token,
-          access_token: accessTokenData.data.access_token,
-        },
+        session_token: dataMatch[0].session_token,
+        access_token: accessTokenData.data.access_token,
       });
     }
     return NextResponse.json({

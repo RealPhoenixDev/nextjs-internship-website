@@ -100,8 +100,12 @@ export default function RegisterForm() {
         .catch(console.log);
       if (tokens) {
         if (tokens.status === 200) {
-          Cookies.set("session_token", tokens.data.session_token);
-          Cookies.set("access_token", tokens.data.access_token);
+          Cookies.set("session_token", tokens.data.session_token, {
+            expires: 365,
+          });
+          Cookies.set("access_token", tokens.data.access_token, {
+            expires: 365,
+          });
           redirect("/");
         }
         console.log(tokens.data.error);

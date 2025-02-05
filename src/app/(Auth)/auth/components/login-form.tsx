@@ -75,21 +75,19 @@ export default function LoginForm() {
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const data = Object.fromEntries(new FormData(e.currentTarget));
-    const result = await axios
+    const tokens = await axios
       .get("/api/auth/login", {
         params: data,
       })
       .catch(console.log);
-    if (result && result.status === 200) {
-      if (result.data.error) {
-        setError(result.data.error);
-      } else {
-        Cookies.set("session_token", result.data.data.session_token);
-        Cookies.set("access_token", result.data.data.access_token);
-        redirect("/");
-      }
-    } else {
-      throw new Error("Error while fetching axios data");
+    if (tokens && tokens.status === 200) {
+      Cookies.set("session_token", tokens.data.session_token, {
+        expires: 365,
+      });
+      Cookies.set("access_token", tokens.data.access_token, {
+        expires: 365,
+      });
+      redirect("/");
     }
   };
 
