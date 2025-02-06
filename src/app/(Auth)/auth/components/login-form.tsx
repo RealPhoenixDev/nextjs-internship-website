@@ -80,19 +80,29 @@ export default function LoginForm() {
         params: data,
       })
       .catch(console.log);
-    if (tokens && tokens.status === 200) {
-      Cookies.set("session_token", tokens.data.session_token, {
-        expires: 365,
-      });
-      Cookies.set("access_token", tokens.data.access_token, {
-        expires: 365,
-      });
-      redirect("/");
+    if (tokens) {
+      if (tokens.status === 200) {
+        Cookies.set("session_token", tokens.data.session_token, {
+          expires: 365,
+        });
+        Cookies.set("access_token", tokens.data.access_token, {
+          expires: 365,
+        });
+        redirect("/");
+      } else {
+        console.log(tokens.data);
+        setError(tokens.data.error);
+      }
     }
   };
 
   return (
-    <Form className="mt-8 gap-4" onSubmit={onSubmit} validationErrors={error}>
+    <Form
+      className="mt-8 gap-4"
+      onSubmit={onSubmit}
+      validationErrors={error}
+      validationBehavior="native"
+    >
       <Input
         isRequired
         name="username_email"
@@ -102,6 +112,7 @@ export default function LoginForm() {
         variant="bordered"
       />
       <Input
+        isRequired
         name="password"
         placeholder="Password"
         value={password}
@@ -125,7 +136,12 @@ export default function LoginForm() {
           </button>
         }
       />
-      <Button type="submit" radius="sm" className="w-full bg-primary-500 h-14">
+      <Button
+        type="submit"
+        radius="sm"
+        color="secondary"
+        className="w-full h-14"
+      >
         Log In
       </Button>
     </Form>

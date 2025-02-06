@@ -21,12 +21,15 @@ export async function GET(req: Request) {
     // Checks if there are users with provided Username or Email
     if (dataMatch.length === 0) {
       if (emailMatch.length === 0) {
-        return NextResponse.json({
-          error: {
-            username_email: "Username or password is incorrect!",
-            password: "Username or password is incorrect!",
+        return NextResponse.json(
+          {
+            error: {
+              username_email: "Username or password is incorrect!",
+              password: "Username or password is incorrect!",
+            },
           },
-        });
+          { status: 201 }
+        );
       }
       dataMatch = emailMatch;
     }

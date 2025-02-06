@@ -1,3 +1,4 @@
+"use client";
 import {
   Form,
   Radio,
@@ -9,9 +10,11 @@ import {
 import axios from "axios";
 import { FormEvent, useEffect, useState } from "react";
 import Cookies from "js-cookie";
+import { parseDate } from "@internationalized/date";
 
 export default function SettingsForm() {
   const [data, setData] = useState({});
+  const [renderData, setRenderData] = useState(<></>);
   useEffect(() => {
     const user_data = axios
       .get("/api/user/settings", {
@@ -20,11 +23,23 @@ export default function SettingsForm() {
         },
       })
       .then((res) => {
-        console.log(res.data);
-        setData(res.data); // FIX THIS
-        console.log(data);
+        if (Object.keys(res.data).length < 1) {
+          setData({ empty: true });
+          return;
+        }
+        setData(res.data);
       });
   }, []);
+  useEffect(() => {
+    if (Object.keys(data).length > 0) {
+      setRenderData(renderPage(data));
+    }
+  }, [data]);
+
+  return renderData;
+}
+
+function renderPage(data: object) {
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -37,7 +52,6 @@ export default function SettingsForm() {
     });
     location.reload();
   };
-
   return (
     <Form validationBehavior="native" className="gap-6" onSubmit={onSubmit}>
       <RadioGroup
@@ -63,16 +77,18 @@ export default function SettingsForm() {
         className="max-w-[284px]"
         label="Favourite date"
         name="fav_date"
-        defaultValue={data.fav_date}
+        variant="bordered"
+        labelPlacement="outside"
+        defaultValue={data.fav_date ? parseDate(data.fav_date) : ""}
       />
       <Slider
-        label="Bumpscocity"
-        name="bumpscocity"
+        label="Bumpscosity"
+        name="bumpscosity"
         minValue={0}
         maxValue={100}
         step={1}
         size="sm"
-        defaultValue={data.bumpscocity}
+        defaultValue={data.bumpscosity}
       />
       <Button value="Submit" type="submit" radius="sm">
         Update

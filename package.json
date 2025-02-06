@@ -27,6 +27,7 @@
     "@heroui/tabs": "^2.2.8",
     "@heroui/theme": "^2.4.6",
     "@heroui/user": "^2.2.7",
+    "@internationalized/date": "^3.7.0",
     "axios": "^1.7.9",
     "cookies-next": "^5.1.0",
     "framer-motion": "^12.0.1",

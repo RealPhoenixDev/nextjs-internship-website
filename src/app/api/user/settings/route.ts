@@ -67,8 +67,10 @@ export async function POST(req: Request) {
       }
     }
     delete result.access_token;
-    result["_id"] = user[0]._id;
-    settings_collection.insertOne(result);
+    // result["_id"] = user[0]._id;
+    settings_collection.replaceOne({ _id: user[0]._id }, result, {
+      upsert: true,
+    });
     return NextResponse.json({});
   } catch (error) {
     console.log(error);
