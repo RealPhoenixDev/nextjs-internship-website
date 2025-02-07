@@ -98,6 +98,13 @@ export default function Navbar() {
             Contacts
           </Link>
         </NavbarItem>
+        {user && (
+          <NavbarItem>
+            <Link href="/board" underline="hover" color="foreground">
+              Board
+            </Link>
+          </NavbarItem>
+        )}
       </NavbarContent>
       <NavbarContent justify="end">
         {!user && (
